@@ -1,23 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Net;
 
 namespace Wallhaven_Client.API
 {
     class WebCrawler
     {
+        //Object used for web queries
         WebClient webObject = new WebClient();
         
+        //The HTML page currently being searched
         string HTML = "";
+
+        //Holds a list of URLs to the images container, and the raw image link
         List<string> ImageSiteList = new List<string>();
         List<string> rawImages = new List<string>();
 
+        //Experssion to search for to find the image's container site
         string ImageIdentifier = "<a class=\"preview\" href=\"";
         string ImageIdentifierEnd = "target=\"_blank\"  ></a>";
 
+        //Expression to search for to find the raw image
         string RawImageIdentifier = "//wallpapers.";
         string RawImageIdentifierEnd = "\" /><link";
 
@@ -84,18 +87,24 @@ namespace Wallhaven_Client.API
             return rawImages;
         }
 
-        public bool startDownload()
+        public bool startDownload(string saveDirectory)
         {
-            string localPath = @"C:\Users\Oliver\Desktop\images\";
+            //Check if we can find the save directory, if not, make it.
+            if (!System.IO.Directory.Exists(saveDirectory))
+                System.IO.Directory.CreateDirectory(saveDirectory);
 
             try
             {
+                //Foreach image
                 foreach (string s in rawImages)
                 {
-                    webObject.DownloadFile(s, localPath + s.Substring(s.IndexOf("n-"), s.Length - s.IndexOf("n-")));
+                    //Download it
+                    webObject.DownloadFile(s, saveDirectory + s.Substring(s.IndexOf("n-"), s.Length - s.IndexOf("n-")));
+                    Form1.imagesDownloaded++;
+                    
                 }
             }
-            catch (Exception ex) { return false;}
+            catch (Exception ex) { return false; } //If error downloading, return fail.
 
             return true;
         }
