@@ -6,8 +6,7 @@ Supports:
 - Resolution Tags.
 - Search Tags.
 - Mass Save.
-
-To-Do:
 - Add custom directories per search query.
+To-Do:
 - Fix up speed, maybe modify the webclient queries.
 
